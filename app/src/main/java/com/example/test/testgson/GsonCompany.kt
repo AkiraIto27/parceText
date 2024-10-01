@@ -1,14 +1,15 @@
 package com.example.test.testgson
 
 
-class GsonCompany {
-    private val name: String? = null
-    private val userInfos: List<GsonUserInfo>? = null
+data class GsonCompany(
+    private val name: String,
+    private val userInfos: List<GsonUserInfo>
+) {
 
     override fun toString(): String {
         return "Company{" +
-            "name='" + name + '\'' +
-            ", userInfos=" + userInfos +
-            '}'
+                "name='" + name + '\'' +
+                ", userInfos=" + userInfos +
+                '}'
     }
 }

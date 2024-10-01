@@ -1,15 +1,16 @@
 package com.example.test.testMoshi
 
-import testMoshi.MoshiUserInfo
+import com.squareup.moshi.JsonClass
 
-class MoshiCompany {
-    var name: String? = null
-    var userInfos: List<MoshiUserInfo>? = null
-
+@JsonClass(generateAdapter = true)
+data class MoshiCompany(
+    var name: String = "",
+    var userInfos: List<MoshiUserInfo>
+) {
     override fun toString(): String {
         return "Company{" +
-            "name='" + name + '\'' +
-            ", userInfos=" + userInfos +
-            '}'
+                "name='" + name + '\'' +
+                ", userInfos=" + userInfos +
+                '}'
     }
 }

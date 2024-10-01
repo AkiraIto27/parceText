@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class KtxSerializationUserInfo(
-    val name: String? = null,
-    val age: Int = 0
+    val name: String = "",
+    val age: Int
 ) {
 
     override fun toString(): String {
         return "UserInfo{" +
-            "name='" + name + '\'' +
-            ", age=" + age +
-            '}'
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}'
     }
 }

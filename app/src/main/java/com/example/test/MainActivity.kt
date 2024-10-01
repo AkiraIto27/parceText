@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import kotlinx.serialization.encodeToString
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,64 +54,140 @@ fun testMethod(assetManager: AssetManager) {
     val bufferedReader = BufferedReader(InputStreamReader(inputStream))
     val str: String = bufferedReader.readText()
 
-
     // Gson
-    val gson = Gson()
-    var startTime = System.currentTimeMillis()
-    val gsonCompany = gson.fromJson(str, GsonCompany::class.java)
-    println("tetetest gson:$gsonCompany")
-    var endTime = System.currentTimeMillis()
-    println("tetetest gson1回の処理時間：" + (endTime - startTime) + " ms")
+    try {
+        val gson = Gson()
+        var startTime = System.currentTimeMillis()
+        val gsonCompany = gson.fromJson(str, GsonCompany::class.java)
+        println("tetetest gson:$gsonCompany")
+        var endTime = System.currentTimeMillis()
+        println("tetetest gson fromJson 1回の処理時間：" + (endTime - startTime) + " ms")
 
-    startTime = System.currentTimeMillis()
-    for (i in 0..1000) {
-        gson.fromJson(str, GsonCompany::class.java)
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            gson.fromJson(str, GsonCompany::class.java)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest gson fromJson 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+        // Gson serialization
+        startTime = System.currentTimeMillis()
+        val gsonJson = gson.toJson(gsonCompany)
+        println("tetetest gson toJson: $gsonJson")
+        endTime = System.currentTimeMillis()
+        println("tetetest gson toJson 1回の処理時間：" + (endTime - startTime) + " ms")
+
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            gson.toJson(gsonCompany)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest gson toJson 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+    } catch (e: Exception) {
+        println("tetetest gson exception = ${e.message}")
     }
-    endTime = System.currentTimeMillis()
-    println("tetetest gson1000回の処理時間：" + (endTime - startTime) + " ms")
 
     // Jackson
-    val mapper = ObjectMapper()
-    startTime = System.currentTimeMillis()
-    val jacksonCompany: JacksonCompany = mapper.readValue(str, JacksonCompany::class.java)
-    println("tetetest jackson:$jacksonCompany")
-    endTime = System.currentTimeMillis()
-    println("tetetest jackson1回の処理時間：" + (endTime - startTime) + " ms")
+    try {
+        val mapper = ObjectMapper()
+        var startTime = System.currentTimeMillis()
+        val jacksonCompany: JacksonCompany = mapper.readValue(str, JacksonCompany::class.java)
+        println("tetetest jackson:$jacksonCompany")
+        var endTime = System.currentTimeMillis()
+        println("tetetest jackson readValue 1回の処理時間：" + (endTime - startTime) + " ms")
 
-    startTime = System.currentTimeMillis()
-    for (i in 0..1000) {
-        mapper.readValue(str, JacksonCompany::class.java)
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            mapper.readValue(str, JacksonCompany::class.java)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest jackson readValue 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+        // Jackson serialization
+        startTime = System.currentTimeMillis()
+        val jacksonJson = mapper.writeValueAsString(jacksonCompany)
+        println("tetetest jackson writeValueAsString: $jacksonJson")
+        endTime = System.currentTimeMillis()
+        println("tetetest jackson writeValueAsString 1回の処理時間：" + (endTime - startTime) + " ms")
+
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            mapper.writeValueAsString(jacksonCompany)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest jackson writeValueAsString 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+    } catch (e: Exception) {
+        println("tetetest jackson exception = ${e.message}")
     }
-    endTime = System.currentTimeMillis()
-    println("tetetest jackson1000回の処理時間：" + (endTime - startTime) + " ms")
 
     // Moshi
-    val moshi: Moshi = Builder().add(KotlinJsonAdapterFactory()).build()
-    val jsonAdapter = moshi.adapter(MoshiCompany::class.java)
-    startTime = System.currentTimeMillis()
-    val moshiCompany: MoshiCompany? = jsonAdapter.fromJson(str)
-    println("tetetest moshi:$moshiCompany")
-    endTime = System.currentTimeMillis()
-    println("tetetest moshi1回の処理時間：" + (endTime - startTime) + " ms")
-    startTime = System.currentTimeMillis()
-    for (i in 0..1000) {
-        jsonAdapter.fromJson(str)
+    try {
+        val moshi: Moshi = Builder().add(KotlinJsonAdapterFactory()).build()
+        val jsonAdapter = moshi.adapter(MoshiCompany::class.java)
+        var startTime = System.currentTimeMillis()
+        val moshiCompany: MoshiCompany? = jsonAdapter.fromJson(str)
+        println("tetetest moshi:$moshiCompany")
+        var endTime = System.currentTimeMillis()
+        println("tetetest moshi fromJson 1回の処理時間：" + (endTime - startTime) + " ms")
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            jsonAdapter.fromJson(str)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest moshi fromJson 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+        // Moshi serialization
+        startTime = System.currentTimeMillis()
+        val moshiJson = jsonAdapter.toJson(moshiCompany)
+        println("tetetest moshi toJson: $moshiJson")
+        endTime = System.currentTimeMillis()
+        println("tetetest moshi toJson 1回の処理時間：" + (endTime - startTime) + " ms")
+
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            jsonAdapter.toJson(moshiCompany)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest moshi toJson 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+    } catch (e: Exception) {
+        println("tetetest moshi exception = ${e.message}")
     }
-    endTime = System.currentTimeMillis()
-    println("tetetest moshi1000回の処理時間：" + (endTime - startTime) + " ms")
 
     // kotlinx serialization
-    startTime = System.currentTimeMillis()
-    val serializationCompany: KtxSerializationCompany = Json.decodeFromString(str)
-    println("tetetest kotlinx.serialization: $serializationCompany")
-    endTime = System.currentTimeMillis()
-    println("tetetest kotlinx.serialization1回の処理時間：" + (endTime - startTime) + " ms")
-    startTime = System.currentTimeMillis()
-    for (i in 0..1000) {
-        Json.decodeFromString<KtxSerializationCompany>(str)
+    try {
+        var startTime = System.currentTimeMillis()
+        val serializationCompany: KtxSerializationCompany = Json.decodeFromString(str)
+        println("tetetest kotlinx.serialization: $serializationCompany")
+        var endTime = System.currentTimeMillis()
+        println("tetetest kotlinx.serialization decodeFromString 1回の処理時間：" + (endTime - startTime) + " ms")
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            Json.decodeFromString<KtxSerializationCompany>(str)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest kotlinx.serialization decodeFromString 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+        // kotlinx serialization serialization
+        startTime = System.currentTimeMillis()
+        val kotlinxSerializationJson =
+            Json.encodeToString<KtxSerializationCompany>(serializationCompany)
+        println("tetetest kotlinx.serialization encodeToString: $kotlinxSerializationJson")
+        endTime = System.currentTimeMillis()
+        println("tetetest kotlinx.serialization encodeToString 1回の処理時間：" + (endTime - startTime) + " ms")
+
+        startTime = System.currentTimeMillis()
+        for (i in 0..1000) {
+            Json.encodeToString(serializationCompany)
+        }
+        endTime = System.currentTimeMillis()
+        println("tetetest kotlinx.serialization encodeToString 1000回の処理時間：" + (endTime - startTime) + " ms")
+
+    } catch (e: Exception) {
+        println("tetetest kotlinx.serialization exception = ${e.message}")
     }
-    endTime = System.currentTimeMillis()
-    println("tetetest kotlinx.serialization1000回の処理時間：" + (endTime - startTime) + " ms")
 }
 
 @Composable

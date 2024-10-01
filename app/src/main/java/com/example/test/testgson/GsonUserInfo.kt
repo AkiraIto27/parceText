@@ -1,13 +1,14 @@
 package com.example.test.testgson
 
-class GsonUserInfo {
-    private val name: String? = null
-    private val age = 0
+data class GsonUserInfo(
+    private val name: String,
+    private val age: Int
+) {
 
     override fun toString(): String {
         return "UserInfo{" +
-            "name='" + name + '\'' +
-            ", age=" + age +
-            '}'
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}'
     }
 }

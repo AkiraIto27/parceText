@@ -1,13 +1,16 @@
-package testMoshi
+package com.example.test.testMoshi
 
-class MoshiUserInfo {
-    var name: String? = null
-    var age: Int = 0
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
+data class MoshiUserInfo(
+    var name: String = "",
+    var age: Int,
+) {
     override fun toString(): String {
         return "UserInfo{" +
-            "name='" + name + '\'' +
-            ", age=" + age +
-            '}'
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}'
     }
 }
