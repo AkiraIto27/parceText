@@ -159,13 +159,14 @@ fun testMethod(assetManager: AssetManager) {
     // kotlinx serialization
     try {
         var startTime = System.currentTimeMillis()
-        val serializationCompany: KtxSerializationCompany = Json.decodeFromString(str)
+        val json = Json{ignoreUnknownKeys = true}// data classにないKeyがJSONにある場合はここがないとExceptionが出る
+        val serializationCompany: KtxSerializationCompany = json.decodeFromString(str)
         println("tetetest kotlinx.serialization: $serializationCompany")
         var endTime = System.currentTimeMillis()
         println("tetetest kotlinx.serialization decodeFromString 1回の処理時間：" + (endTime - startTime) + " ms")
         startTime = System.currentTimeMillis()
         for (i in 0..1000) {
-            Json.decodeFromString<KtxSerializationCompany>(str)
+            json.decodeFromString<KtxSerializationCompany>(str)
         }
         endTime = System.currentTimeMillis()
         println("tetetest kotlinx.serialization decodeFromString 1000回の処理時間：" + (endTime - startTime) + " ms")
@@ -173,14 +174,14 @@ fun testMethod(assetManager: AssetManager) {
         // kotlinx serialization serialization
         startTime = System.currentTimeMillis()
         val kotlinxSerializationJson =
-            Json.encodeToString<KtxSerializationCompany>(serializationCompany)
+            json.encodeToString<KtxSerializationCompany>(serializationCompany)
         println("tetetest kotlinx.serialization encodeToString: $kotlinxSerializationJson")
         endTime = System.currentTimeMillis()
         println("tetetest kotlinx.serialization encodeToString 1回の処理時間：" + (endTime - startTime) + " ms")
 
         startTime = System.currentTimeMillis()
         for (i in 0..1000) {
-            Json.encodeToString(serializationCompany)
+            json.encodeToString(serializationCompany)
         }
         endTime = System.currentTimeMillis()
         println("tetetest kotlinx.serialization encodeToString 1000回の処理時間：" + (endTime - startTime) + " ms")
