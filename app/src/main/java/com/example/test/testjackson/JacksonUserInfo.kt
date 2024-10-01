@@ -1,11 +1,8 @@
-package testjackson
-
-import com.fasterxml.jackson.annotation.JsonSetter
-import com.fasterxml.jackson.annotation.Nulls
+package com.example.test.testjackson
 
 class JacksonUserInfo(
-    @JsonSetter(nulls = Nulls.SKIP) var name: String = "",
-    var age: Int,
+    var name: String? = null,
+    var age: Int = 0
 ) {
     override fun toString(): String {
         return "UserInfo{" +
